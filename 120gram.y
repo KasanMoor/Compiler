@@ -939,7 +939,7 @@ parameter_declaration_clause:
 	  parameter_declaration_list ELLIPSIS  { $$ = newNonTerm("parameter_declaration_clause", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| parameter_declaration_list { $$ = newNonTerm("parameter_declaration_clause", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| ELLIPSIS  { $$ = newNonTerm("parameter_declaration_clause", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| { $$ = newNonTerm("parameter_declaration_clause", 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| { $$ = NULL; }
 	| parameter_declaration_list ',' ELLIPSIS  { $$ = newNonTerm("parameter_declaration_clause", 3, $1, $2, $3, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 

@@ -8,7 +8,7 @@ all: 120
 	$(CC) -g -c $<
 
 120: 120gram.o 120lex.o tree.o
-	cc -o 120 120gram.o 120lex.o tree.o
+	cc -o 120++ 120gram.o 120lex.o tree.o
 
 120gram.c 120gram.h: 120gram.y
 	$(YACC) -dt --verbose 120gram.y
@@ -23,5 +23,5 @@ all: 120
 tree.o: tree.h tree.c
 
 clean:
-	rm -f 120 *.o
+	rm -f 120++ *.o
 	rm -f 120lex.c 120gram.c 120gram.h

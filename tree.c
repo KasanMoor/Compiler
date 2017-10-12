@@ -61,15 +61,18 @@ int increaseKidSize(Tree *tree) {
 }
 
 void printTree(Tree *tree) {
-    printf("%s, %d: ", tree->prodrule, tree->nkids);
+    //printf("%s, %d: ", tree->prodrule, tree->nkids);
     if(tree->leaf != NULL) {
-        printf("%d\n", tree->leaf->category);
+        printf("%s\n", tree->leaf->text);
     } else {
-        printf("\n");
+        //printf("\n");
     }
     int i; 
     for(i=0; i<tree->nkids; i++) {
         Tree **kids = tree->kids;
-        printTree(kids[i]);
+	if(kids[i] != NULL )
+	{
+	    printTree(kids[i]);
+	}
     }
 }

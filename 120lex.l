@@ -302,7 +302,11 @@ int typenametable_insert(char *s, int cat)
 static int
 check_identifier(char *s)
 {
-	return typenametable_lookup(s);
+    struct TreeStruct *tree = newTree("Identifier");
+    Token *token = newToken(0, "file", lineno);
+    tree->leaf = token;
+    yylval.t = tree;
+    return typenametable_lookup(s);
 }
 
 static int token(int cat)
