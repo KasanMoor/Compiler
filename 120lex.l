@@ -208,12 +208,12 @@ stringtext				([^"])|(\\.)
 "#include <iostream>"			{ saw_iostream = 1; }
 "#include <string>"			{ saw_string = 1; }
 "using namespace std;"			{ saw_std = 1;
-		if (saw_string) typenametable_insert("string", CLASS_NAME);
+		/*if (saw_string) typenametable_insert("string", CLASS_NAME);
 		if (saw_iostream) {
 			typenametable_insert("ifstream", CLASS_NAME);
 			typenametable_insert("ofstream", CLASS_NAME);
 			}
-		}
+		*/}
 
 
 .					{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); }
@@ -259,46 +259,6 @@ skip_until_eol(void)
 	++lineno;
 }
 
-/*
- * Type name table.
- * Replace this with a hash table, when you get a chance.
- */
-struct typenametable_entry {
-   char *name;
-   int category;
-   struct typenametable_entry *next;
-   } *head;
-
-int typenametable_lookup(char *s)
-{
-   struct typenametable_entry *tmp = head;
-   while (tmp) {
-      if (!strcmp(s, tmp->name)) return tmp->category;
-      tmp = tmp->next;
-   }
-   return IDENTIFIER;
-}
-
-int typenametable_insert(char *s, int cat)
-{
-   struct typenametable_entry *tmp = head;
-   while (tmp) {
-      if (!strcmp(s, tmp->name)) {
-         fprintf(stderr,
-	    "warning, %s is already in the typename table as a %d\n",
-	    s, tmp->category );
-         return tmp->category;
-         }
-      tmp = tmp->next;
-   }
-   tmp = calloc(1, sizeof (struct typenametable_entry));
-   if(!tmp) { fprintf(stderr, "tnti out of memory\n"); return -1; }
-   tmp->name = strdup(s);
-   tmp->category = cat;
-   tmp->next = head;
-   head = tmp;
-}
-
 static int
 check_identifier(char *s)
 {
@@ -306,7 +266,7 @@ check_identifier(char *s)
     Token *token = newToken(0, "file", lineno);
     tree->leaf = token;
     yylval.t = tree;
-    return typenametable_lookup(s);
+    return IDENTIFIER;
 }
 
 static int token(int cat)

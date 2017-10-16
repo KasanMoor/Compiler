@@ -50,6 +50,7 @@
 
 /* define a syntax tree data type */
 #include "tree.h"
+#include "symbolTable.h"
 
 extern FILE *yyin;
 extern int lineno;
@@ -358,7 +359,9 @@ boolean_literal:
 translation_unit:
 	declaration_seq_opt { $$ = newNonTerm("declaration_seq_opt",  1, $1, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL);
                               root = $$;
-                              printTree(root); }
+                              printTree(root); 
+			      currentScope = NULL;
+			      buildSymbolTable(root);}
 	;
 
 /*----------------------------------------------------------------------
@@ -591,14 +594,14 @@ constant_expression:
  *----------------------------------------------------------------------*/
 
 statement:
-	labeled_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| expression_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| compound_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| selection_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| iteration_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| jump_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| declaration_statement { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| try_block { $$ = newNonTerm("constant_expression", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	labeled_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| expression_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| compound_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| selection_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| iteration_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| jump_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| declaration_statement { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| try_block { $$ = newNonTerm("statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 labeled_statement:
@@ -658,8 +661,8 @@ declaration_statement:
  *----------------------------------------------------------------------*/
 
 declaration_seq:
-	declaration { $$ = newNonTerm("declaration_statement", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| declaration_seq declaration { $$ = newNonTerm("declaration_statement", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	declaration { $$ = newNonTerm("declaration_statement_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| declaration_seq declaration { $$ = newNonTerm("declaration_statement_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 declaration:
@@ -902,15 +905,15 @@ cv_qualifier_seq:
 	;
 
 cv_qualifier:
-	CONST { $$ = newNonTerm("cv_qualifier_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| VOLATILE { $$ = newNonTerm("cv_qualifier_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	CONST { $$ = newNonTerm("cv_qualifier", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| VOLATILE { $$ = newNonTerm("cv_qualifier", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 declarator_id:
-	  id_expression { $$ = newNonTerm("cv_qualifier_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| COLONCOLON id_expression { $$ = newNonTerm("cv_qualifier_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| COLONCOLON nested_name_specifier type_name { $$ = newNonTerm("cv_qualifier_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| COLONCOLON type_name { $$ = newNonTerm("cv_qualifier_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	  id_expression { $$ = newNonTerm("declarator_id", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| COLONCOLON id_expression { $$ = newNonTerm("declarator_id", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| COLONCOLON nested_name_specifier type_name { $$ = newNonTerm("declarator_id", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| COLONCOLON type_name { $$ = newNonTerm("declarator_id", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 type_id:
@@ -967,12 +970,12 @@ function_body:
 	;
 
 initializer:
-	'=' initializer_clause { $$ = newNonTerm("function_body", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| '(' expression_list ')' { $$ = newNonTerm("function_body", 3, $1, $2, $3, NULL, NULL, NULL, NULL, NULL, NULL); }
+	'=' initializer_clause { $$ = newNonTerm("initializer", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| '(' expression_list ')' { $$ = newNonTerm("initializer", 3, $1, $2, $3, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 initializer_clause:
-	assignment_expression { $$ = newNonTerm("function_body", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	assignment_expression { $$ = newNonTerm("initializer_clause", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| '{' initializer_list COMMA_opt '}' { $$ = newNonTerm("function_body", 4, $1, $2, $3, $4, NULL, NULL, NULL, NULL, NULL); }
 	| '{' '}' { $$ = newNonTerm("function_body", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;

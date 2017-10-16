@@ -1,3 +1,5 @@
+#ifndef TREE
+#define TREE
 #define DEFAULT_KID_SIZE 9
 
 typedef struct TokenStruct {
@@ -23,3 +25,5 @@ Token *newToken(int, char *, int);
 void addKid(Tree *, Tree *);
 int increaseKidSize(Tree *);
 void printTree(Tree *);
+
+#endif
