@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 void pushScope(Scope *newScope)
 {
     newScope->next = currentScope;
@@ -59,14 +60,14 @@ int symbolExistsInScope(char *symbolName)
 
 Scope *newScope()
 {
-    Scope *newScope = malloc(sizeof(Scope));
+    Scope *newScope = (Scope *)malloc(sizeof(Scope));
     newScope->next = NULL;
     return newScope;
 }
 
 Symbol *newSymbol(Tree *parseTree)
 {
-    Symbol *newSymbol = malloc(sizeof(Symbol));
+    Symbol *newSymbol = (Symbol *)malloc(sizeof(Symbol));
     newSymbol->name = findName(parseTree);
     //newSymbol->category = category;
     newSymbol->next = NULL;
@@ -98,6 +99,7 @@ int buildSymbolTable(Tree *parseTree)
     pushScope(newScope());
     int scanResult = scanTree(parseTree);
     popScope();
+    return scanResult;
 }
 
 int scanTree(Tree *parseTree)
@@ -107,7 +109,7 @@ int scanTree(Tree *parseTree)
     {
 	    /*mangle the prod rule so we dont enter a recursive loop*/
 	parseTree->prodrule = "mangled";
-	buildSymbolTable(parseTree);
+	return buildSymbolTable(parseTree);
     }
     if(isDeclaration(parseTree))
     {
@@ -121,17 +123,18 @@ int scanTree(Tree *parseTree)
             printf("error: %s has not been declared\n", parseTree->leaf->text);
 	    return 0;
 	}
-    }
+  }
     int i;
     for(i=0; i<parseTree->nkids; i++)
     {
         Tree **kids = parseTree->kids;
 	if(kids[i] != NULL)
 	{
-	    if(scanTree(kids[i]))
+            scanTree(kids[i]);
+	    /*if(scanTree(kids[i]))
 	    {
 	        return 1;
-	    }
+	    }*/
 	}
     }
     return 0;
@@ -140,7 +143,8 @@ int scanTree(Tree *parseTree)
 int isDeclaration(Tree *parseTree)
 {
     if(
-        !strcmp(parseTree->prodrule, "declarator_id") || 
+        !strcmp(parseTree->prodrule, "init_declarator") || 
+        !strcmp(parseTree->prodrule, "member_declarator") || 
         !strcmp(parseTree->prodrule, "class_head")
 	)
     {
@@ -152,8 +156,8 @@ int isDeclaration(Tree *parseTree)
 int isNewScope(Tree *parseTree)
 {
     if(
-        !strcmp(parseTree->prodrule, "function_definition") || 
-        !strcmp(parseTree->prodrule, "member_specificatoin_opt")
+        !strcmp(parseTree->prodrule, "function_body") || 
+        !strcmp(parseTree->prodrule, "class_body")
 	)
     {
         return 1;

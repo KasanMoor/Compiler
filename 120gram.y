@@ -55,8 +55,8 @@
 extern FILE *yyin;
 extern int lineno;
 extern char *yytext;
-#define YYDEBUG 1
-int yydebug=1;
+#define YYDEBUG 0
+int yydebug=0;
 Tree *root;
 
 static void yyerror(char *s);
@@ -74,6 +74,7 @@ static void yyerror(char *s);
 
 %type < t > typedef_name
 %type < t > namespace_name
+%type < t > class_body
 %type < t > original_namespace_name
 %type < t > class_name
 %type < t > enum_name
@@ -357,9 +358,9 @@ boolean_literal:
  *----------------------------------------------------------------------*/
 
 translation_unit:
-	declaration_seq_opt { $$ = newNonTerm("declaration_seq_opt",  1, $1, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL);
+	declaration_seq_opt { $$ = newNonTerm("translation_unit",  1, $1, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL);
                               root = $$;
-                              printTree(root); 
+                              /*printTree(root); */
 			      currentScope = NULL;
 			      buildSymbolTable(root);}
 	;
@@ -661,8 +662,8 @@ declaration_statement:
  *----------------------------------------------------------------------*/
 
 declaration_seq:
-	declaration { $$ = newNonTerm("declaration_statement_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| declaration_seq declaration { $$ = newNonTerm("declaration_statement_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	declaration { $$ = newNonTerm("declaration_seq", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| declaration_seq declaration { $$ = newNonTerm("declaration_seq", 2, $1, $2, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 declaration:
@@ -990,7 +991,11 @@ initializer_list:
  *----------------------------------------------------------------------*/
 
 class_specifier:
-	class_head '{' member_specification_opt '}' { $$ = newNonTerm("class_specifier", 4, $1, $2, $3, $4, NULL, NULL, NULL, NULL, NULL); }
+	class_head '{' class_body '}' { $$ = newNonTerm("class_specifier", 4, $1, $2, $3, $4, NULL, NULL, NULL, NULL, NULL); }
+	;
+
+class_body:
+        member_specification_opt { $$ = newNonTerm("class_body", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 class_head:
