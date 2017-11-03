@@ -1,6 +1,7 @@
 YACC=yacc
 LEX=flex
 CC=gcc
+CFLAGS=-g -Wall
 
 all: 120
 
@@ -8,7 +9,7 @@ all: 120
 	$(CC) -g -c $<
 
 120: 120gram.o 120lex.o tree.o symbolTable.o
-	cc -o 120++ 120gram.o 120lex.o tree.o symbolTable.o
+	cc $(CFLAGS) -o 120++ 120gram.o 120lex.o tree.o symbolTable.o
 
 120gram.c 120gram.h: 120gram.y
 	$(YACC) -dt --verbose 120gram.y
@@ -27,3 +28,4 @@ symbolTable.o: symbolTable.h symbolTable.c
 clean:
 	rm -f 120++ *.o
 	rm -f 120lex.c 120gram.c 120gram.h
+	rm -f y.output

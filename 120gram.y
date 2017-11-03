@@ -55,8 +55,8 @@
 extern FILE *yyin;
 extern int lineno;
 extern char *yytext;
-#define YYDEBUG 0
-int yydebug=0;
+#define YYDEBUG 1
+int yydebug=1;
 Tree *root;
 
 static void yyerror(char *s);

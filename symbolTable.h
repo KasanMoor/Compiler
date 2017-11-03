@@ -8,7 +8,7 @@
 typedef struct symbolStruct
 {
     char *name;
-    int category;
+    char *type;
     struct symbolStruct *next;
 } Symbol;
 
@@ -18,7 +18,7 @@ typedef struct scopeStruct
     struct scopeStruct *next;
 } Scope;
 
-/* the global stack vairable for all scopes */
+/* the global stack variable for all scopes */
 Scope *currentScope;
 
 void pushScope(Scope *newScope);

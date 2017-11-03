@@ -69,10 +69,15 @@ Symbol *newSymbol(Tree *parseTree)
 {
     Symbol *newSymbol = (Symbol *)malloc(sizeof(Symbol));
     newSymbol->name = findName(parseTree);
-    //newSymbol->category = category;
+   // newSymbol->type = findType(parseTree);
     newSymbol->next = NULL;
+    // DEBUG
+    printf("newSymbol: %s %s", parseTree->prodrule, newSymbol->name);
+    // END DEBUG
     return newSymbol;
 }
+
+
 
 char *findName(Tree *parseTree)
 {
