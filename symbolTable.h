@@ -39,5 +39,6 @@ int buildSymbolTable(Tree *parseTree);
 int isDeclaration(Tree *parseTree);
 int isNewScope(Tree *parseTree);
 int isSymbolReference(Tree *parseTree);
+int scanTree(Tree * parseTree);
 
 #endif

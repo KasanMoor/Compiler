@@ -72,7 +72,7 @@ Symbol *newSymbol(Tree *parseTree)
    // newSymbol->type = findType(parseTree);
     newSymbol->next = NULL;
     // DEBUG
-    printf("newSymbol: %s %s", parseTree->prodrule, newSymbol->name);
+    printf("newSymbol: %s %s\n", parseTree->prodrule, newSymbol->name);
     // END DEBUG
     return newSymbol;
 }
@@ -109,6 +109,11 @@ int buildSymbolTable(Tree *parseTree)
 
 int scanTree(Tree *parseTree)
 {
+    printf("%s\n", parseTree->prodrule);
+    if(parseTree->leaf) 
+    {
+        printf("%s\n", parseTree->leaf->text);
+    }
     /* check for new nested scope */
     if(isNewScope(parseTree))
     {
@@ -118,6 +123,10 @@ int scanTree(Tree *parseTree)
     }
     if(isDeclaration(parseTree))
     {
+        /* TODO write a function that handles a
+	 * declaration at a higher level decl_specifier
+	 * and actually inserts type information
+	 */
         return insertSymbol(newSymbol(parseTree));
     }
     else if(isSymbolReference(parseTree))
@@ -147,6 +156,13 @@ int scanTree(Tree *parseTree)
 
 int isDeclaration(Tree *parseTree)
 {
+    /* decl_specifier includes type and all included decls
+     * this includes:
+     * int one, two
+     * int hi
+     * int main()
+     * class hello
+     */
     if(
         !strcmp(parseTree->prodrule, "init_declarator") || 
         !strcmp(parseTree->prodrule, "member_declarator") || 

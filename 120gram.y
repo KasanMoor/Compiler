@@ -55,16 +55,13 @@
 extern FILE *yyin;
 extern int lineno;
 extern char *yytext;
-#define YYDEBUG 1
-int yydebug=1;
+#define YYDEBUG 0
+int yydebug=0;
 Tree *root;
 
 static void yyerror(char *s);
 
 
-/*
- * warning, this %union is not what you need, it is for demonstration purposes.
- */
 %}
 %union {
   Tree *t;

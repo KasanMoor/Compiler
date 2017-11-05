@@ -4,5 +4,11 @@ using namespace std;
 
 int main()
 {
-    cout << "Hello, world!" << endl;
+    char hi;
+    double one, two;
 }
+
+class hello 
+{
+    float five;
+};
