@@ -31,18 +31,23 @@ int hash(char *symbolName)
 
 int insertSymbol(Symbol *newSymbol)
 {
+    if(DEBUG)
+    {
+        printf("inserting symbol: %s\n", newSymbol->name);
+    }
     if(symbolExistsInScope(newSymbol->name))
     {
         printf("error: %s already declared\n", newSymbol->name);
-        return 1;
+        return 0;
     }
     int hashValue = hash(newSymbol->name);
     Symbol *bucketHead = currentScope->hashTable[hashValue];
     newSymbol->next = bucketHead;
     currentScope->hashTable[hashValue] = newSymbol;
-    return 0;
+    return 1;
 }
 
+// TODO make this recursive over all nested scopes
 int symbolExistsInScope(char *symbolName)
 {
     int hashValue = hash(symbolName);
@@ -65,11 +70,11 @@ Scope *newScope()
     return newScope;
 }
 
-Symbol *newSymbol(Tree *parseTree)
+Symbol *newSymbol(char *type, Tree *parseTree)
 {
     Symbol *newSymbol = (Symbol *)malloc(sizeof(Symbol));
     newSymbol->name = findName(parseTree);
-   // newSymbol->type = findType(parseTree);
+    newSymbol->type = type;
     newSymbol->next = NULL;
     // DEBUG
     printf("newSymbol: %s %s\n", parseTree->prodrule, newSymbol->name);
@@ -78,7 +83,11 @@ Symbol *newSymbol(Tree *parseTree)
 }
 
 
-
+/* find the name of a symbol thats being referenced
+ * we end up here when we define a new symbol from a 
+ * parse tree containing the symbol name as the only
+ * prodrule Identifier
+ */
 char *findName(Tree *parseTree)
 {
     if(!strcmp(parseTree->prodrule, "Identifier"))
@@ -107,30 +116,53 @@ int buildSymbolTable(Tree *parseTree)
     return scanResult;
 }
 
+/* the three states we can spect to encounter
+ * when scanning the tree for symbols are
+ * find a new scope
+ * find a declaration
+ * find symbol reference
+ */
 int scanTree(Tree *parseTree)
 {
+    /* debuging information */
     printf("%s\n", parseTree->prodrule);
     if(parseTree->leaf) 
     {
         printf("%s\n", parseTree->leaf->text);
     }
-    /* check for new nested scope */
+
+    /* check for new nested scope 
+     * this includes
+     * class definition
+     * function definition
+     * */
     if(isNewScope(parseTree))
     {
-	    /*mangle the prod rule so we dont enter a recursive loop*/
+	/*mangle the prod rule so we dont enter a recursive loop*/
+	printf("pushing new symbol table\n");
 	parseTree->prodrule = "mangled";
 	return buildSymbolTable(parseTree);
     }
+
+    /* Declaring a new symbol:
+     * find the type
+     * find all symbol names
+     * insert into symbol table
+     */
     if(isDeclaration(parseTree))
     {
-        /* TODO write a function that handles a
-	 * declaration at a higher level decl_specifier
-	 * and actually inserts type information
-	 */
-        return insertSymbol(newSymbol(parseTree));
+        printf("found new declaration %s\n", 
+	    parseTree->prodrule);
+        return insertSymbols(parseTree);
     }
+
+    /* found symbol reference
+     * see if symbol exists
+     * typecheck
+     */
     else if(isSymbolReference(parseTree))
     {
+        printf("found Symbol reference\n");
         int returnCode = symbolExistsInScope(parseTree->leaf->text);
 	if(returnCode == 0) 
 	{
@@ -145,13 +177,84 @@ int scanTree(Tree *parseTree)
 	if(kids[i] != NULL)
 	{
             scanTree(kids[i]);
-	    /*if(scanTree(kids[i]))
-	    {
-	        return 1;
-	    }*/
 	}
     }
     return 0;
+}
+
+int insertSymbols(Tree *parseTree)
+{
+    // scan for type and store
+    char *type = findType(parseTree);
+    // scan for names
+    /* to find names need to find
+     * init_declarator
+     * member_declarator
+     * class_head
+     */
+     return findAndInsertSymbols(type, parseTree);
+}
+
+int findAndInsertSymbols(char *type, Tree *parseTree)
+{
+    if(isNewSymbol(parseTree->prodrule))
+    {
+        Symbol *symbol = newSymbol(type, parseTree);
+        if(!insertSymbol(symbol))
+            // If we find a symbol that is already defined
+	    return 3;
+    }
+    int i;
+    for(i=0; i<parseTree->nkids; i++)
+    {
+        Tree** kids = parseTree->kids;
+	if(kids[i] != NULL)
+	{
+	    findAndInsertSymbols(type, kids[i]);
+	}
+    }
+}
+
+int isNewSymbol(char *prodrule)
+{
+    if( !strcmp(prodrule, "init_declarator") ||
+        !strcmp(prodrule, "member_declarator") ||
+        !strcmp(prodrule, "class_head")
+        )
+    {
+        return 1;
+    } else
+    {
+        return 0;
+    }
+}
+
+char *findType(Tree *parseTree)
+{
+    /* search for simple_type_specifier */
+    Tree *type = findProdRule(parseTree, "simple_type_specifier");
+    return type->kids[0]->leaf->text;
+}
+
+Tree *findProdRule(Tree *parseTree, char *prodrule)
+{
+    if(!strcmp(prodrule, parseTree->prodrule))
+    {
+        return parseTree;
+    }
+    int i;
+    for(i=0; i<parseTree->nkids; i++)
+    {
+        Tree **kids = parseTree->kids;
+        if(kids[i] != NULL)
+	{
+	    Tree *returnTree =
+	        findProdRule(kids[i], prodrule);
+            if(returnTree);
+	        return returnTree;
+	}
+    }  
+    return NULL;
 }
 
 int isDeclaration(Tree *parseTree)
@@ -163,11 +266,7 @@ int isDeclaration(Tree *parseTree)
      * int main()
      * class hello
      */
-    if(
-        !strcmp(parseTree->prodrule, "init_declarator") || 
-        !strcmp(parseTree->prodrule, "member_declarator") || 
-        !strcmp(parseTree->prodrule, "class_head")
-	)
+    if(!strcmp(parseTree->prodrule, "declaration_statement"))
     {
         return 1;
     }

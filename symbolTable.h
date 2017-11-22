@@ -5,6 +5,8 @@
 
 #define TABLE_SIZE 20
 
+int DEBUG;
+
 typedef struct symbolStruct
 {
     char *name;
@@ -25,13 +27,11 @@ void pushScope(Scope *newScope);
 void popScope();
 
 int hash(char *symbolName);
-/* returns 0 on successful insertion 1 if symbol already exists */
-int insertSymbol(Symbol *newSymbol);
-/* returns 1 if symbol exists in scope 0 if not */
+int insertSymbols(Tree *parseTree);
 int symbolExistsInScope(char *symbolName);
 
 Scope *newScope();
-Symbol *newSymbol(Tree *parseTree);
+Symbol *newSymbol(char *type, Tree *parseTree);
 char *findName(Tree *parseTree);
 
 int buildSymbolTable(Tree *parseTree);
@@ -40,5 +40,10 @@ int isDeclaration(Tree *parseTree);
 int isNewScope(Tree *parseTree);
 int isSymbolReference(Tree *parseTree);
 int scanTree(Tree * parseTree);
+int findAndInsertSymbols(char *type, Tree *parseTree);
+int isNewSymbol(char *prodrule);
+char *findType(Tree *parseTree);
+Tree *findProdRule(Tree *parseTree, char *prodrule);
+
 
 #endif

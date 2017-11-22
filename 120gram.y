@@ -1267,127 +1267,127 @@ type_id_list:
  *----------------------------------------------------------------------*/
 
 declaration_seq_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| declaration_seq  { $$ = newNonTerm("declaration_seq_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 nested_name_specifier_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| nested_name_specifier { $$ = newNonTerm("nested_name_specifier_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 expression_list_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| expression_list { $$ = newNonTerm("expression_list_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 COLONCOLON_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| COLONCOLON { $$ = newNonTerm("COLONCOLON_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 new_placement_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| new_placement { $$ = newNonTerm("new_placement_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 new_initializer_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| new_initializer { $$ = newNonTerm("new_initializer_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 new_declarator_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| new_declarator { $$ = newNonTerm("new_declarator_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 expression_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| expression { $$ = newNonTerm("expression_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 statement_seq_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| statement_seq { $$ = newNonTerm("statement_seq_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 condition_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| condition { $$ = newNonTerm("condition_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 enumerator_list_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| enumerator_list { $$ = newNonTerm("enumerator_list_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 initializer_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| initializer { $$ = newNonTerm("initializer_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 constant_expression_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| constant_expression { $$ = newNonTerm("constant_expression_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 abstract_declarator_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| abstract_declarator { $$ = newNonTerm("abstract_declarator_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 type_specifier_seq_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| type_specifier_seq { $$ = newNonTerm("type_specifier_seq_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 direct_abstract_declarator_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| direct_abstract_declarator { $$ = newNonTerm("direct_abstract_declarator_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 ctor_initializer_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| ctor_initializer { $$ = newNonTerm("ctor_initializer_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 COMMA_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| ',' { $$ = newNonTerm("COMMA_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 member_specification_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| member_specification { $$ = newNonTerm("member_specification_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 SEMICOLON_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| ';' { $$ = newNonTerm("SEMICOLON_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 conversion_declarator_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| conversion_declarator { $$ = newNonTerm("conversion_declarator_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 EXPORT_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| EXPORT { $$ = newNonTerm("EXPORT_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 handler_seq_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| handler_seq { $$ = newNonTerm("handler_seq_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 assignment_expression_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| assignment_expression { $$ = newNonTerm("assignment_expression_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
 type_id_list_opt:
-	/* epsilon */
+	/* epsilon */ { $$ = NULL; }
 	| type_id_list { $$ = newNonTerm("type_id_list_opt", 1, $1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL); }
 	;
 
@@ -1401,8 +1401,15 @@ yyerror(char *s)
 
 int main(int argc, char **argv) {
     root = newTree();
+    // There at least one command line argument
     if(argc > 1)
-        yyin = fopen(argv[1], "r");
+        if(!strcmp(argv[1], "-g")) {
+	    DEBUG = 1;
+            yyin = fopen(argv[2], "r");
+	} else {
+	    DEBUG = 0;
+            yyin = fopen(argv[1], "r");
+	}
     do {
         yyparse();
     } while(!feof(yyin));

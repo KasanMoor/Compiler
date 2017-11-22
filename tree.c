@@ -46,7 +46,7 @@ Token *newToken(int returnCode,
     token->lineNumber = lineNumber;
     return token;
 }
-
+/*
 void addKid(Tree *tree, Tree *kid) {
     tree->nkids++;
     if(tree->nkids >= tree->maxKids) {
@@ -54,12 +54,7 @@ void addKid(Tree *tree, Tree *kid) {
     }
     tree->kids[tree->nkids] = kid;
 }
-
-int increaseKidSize(Tree *tree) {
-    tree->maxKids *= 2;
-    tree->kids = (Tree **)realloc(tree->kids, tree->maxKids * sizeof(Tree*));
-}
-
+*/
 void printTree(Tree *tree) {
     printf(" %s\n", tree->prodrule);
     if(tree->leaf != NULL) {

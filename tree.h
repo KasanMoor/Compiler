@@ -22,8 +22,6 @@ typedef struct TreeStruct {
 Tree *newTree();
 Tree *newNonTerm(char *, int, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *);
 Token *newToken(int, char *, int);
-void addKid(Tree *, Tree *);
-int increaseKidSize(Tree *);
 void printTree(Tree *);
 
 #endif
