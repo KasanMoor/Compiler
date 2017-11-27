@@ -37,7 +37,7 @@
 #include "tree.h"
 #include "120gram.h"
 
-int lineno;
+int lineno = 1;
 int saw_iostream, saw_string, saw_std;
 
 static int yywrap(void);
@@ -216,7 +216,7 @@ stringtext				([^"])|(\\.)
 		*/}
 
 
-.					{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); }
+.	{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); }
 
 %%
 
@@ -275,5 +275,10 @@ static int token(int cat)
    Token *token = newToken(cat, "file", lineno);
    tree->leaf = token;
    yylval.t = tree;
+   
+   if(LEX_DEBUG){
+       printf("%d:  %s\n", lineno, strdup(yytext));
+   }
+
    return cat;
 }

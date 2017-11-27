@@ -2,6 +2,8 @@
 #define TREE
 #define DEFAULT_KID_SIZE 9
 
+int LEX_DEBUG;
+
 typedef struct TokenStruct {
     int category;
     char *text;
@@ -22,6 +24,6 @@ typedef struct TreeStruct {
 Tree *newTree();
 Tree *newNonTerm(char *, int, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *);
 Token *newToken(int, char *, int);
-void printTree(Tree *);
+void printTree(int depth, Tree *);
 
 #endif

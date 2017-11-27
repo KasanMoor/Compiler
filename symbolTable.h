@@ -16,6 +16,7 @@ typedef struct symbolStruct
 
 typedef struct scopeStruct
 {
+    char *name;
     Symbol *hashTable[TABLE_SIZE];
     struct scopeStruct *next;
 } Scope;
@@ -30,7 +31,7 @@ int hash(char *symbolName);
 int insertSymbols(Tree *parseTree);
 int symbolExistsInScope(char *symbolName);
 
-Scope *newScope();
+Scope *newScope(char *name);
 Symbol *newSymbol(char *type, Tree *parseTree);
 char *findName(Tree *parseTree);
 

@@ -63,6 +63,9 @@ static void yyerror(char *s);
 
 
 %}
+
+%define parse.error verbose
+
 %union {
   Tree *t;
   char *text;
@@ -357,7 +360,7 @@ boolean_literal:
 translation_unit:
 	declaration_seq_opt { $$ = newNonTerm("translation_unit",  1, $1, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL);
                               root = $$;
-                              /*printTree(root); */
+                              printTree(0, root);
 			      currentScope = NULL;
 			      buildSymbolTable(root);}
 	;
@@ -1396,7 +1399,7 @@ type_id_list_opt:
 static void
 yyerror(char *s)
 {
-	fprintf(stderr, "%d: %s\n", lineno, s);
+    fprintf(stderr, "At line %d: %s\n", lineno, s);
 }
 
 int main(int argc, char **argv) {
@@ -1406,8 +1409,12 @@ int main(int argc, char **argv) {
         if(!strcmp(argv[1], "-g")) {
 	    DEBUG = 1;
             yyin = fopen(argv[2], "r");
+	}else if(!strcmp(argv[1], "-l")){
+            LEX_DEBUG = 1;
+            yyin = fopen(argv[2], "r");
 	} else {
 	    DEBUG = 0;
+	    LEX_DEBUG = 0;
             yyin = fopen(argv[1], "r");
 	}
     do {

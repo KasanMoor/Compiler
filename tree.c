@@ -55,19 +55,23 @@ void addKid(Tree *tree, Tree *kid) {
     tree->kids[tree->nkids] = kid;
 }
 */
-void printTree(Tree *tree) {
-    printf(" %s\n", tree->prodrule);
-    if(tree->leaf != NULL) {
-        printf("%s    %s\n", tree->leaf->text, tree->prodrule);
-    } else {
-        //printf("\n");
+void printTree(int depth, Tree *tree) {
+    int depth_i;
+    for(depth_i = 0; depth_i < depth; depth_i++) {
+        printf("%d ", depth_i);
     }
+    printf("%s ", tree->prodrule);
+    if(tree->leaf != NULL) {
+        printf("%s", tree->leaf->text);
+    }
+    printf("\n");
     int i; 
+    depth++;
     for(i=0; i<tree->nkids; i++) {
         Tree **kids = tree->kids;
 	if(kids[i] != NULL )
 	{
-	    printTree(kids[i]);
+	    printTree(depth, kids[i]);
 	}
     }
 }
