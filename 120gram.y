@@ -153,7 +153,6 @@ static void yyerror(char *s);
 %type < t > extension_namespace_definition
 %type < t > unnamed_namespace_definition
 %type < t > namespace_body
-%type < t > namespace_alias
 %type < t > namespace_alias_definition
 %type < t > qualified_namespace_specifier
 %type < t > using_declaration
