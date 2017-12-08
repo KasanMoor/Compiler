@@ -59,7 +59,8 @@ extern char *yytext;
 int yydebug=0;
 Tree *root;
 
-static void yyerror(char *s);
+static void yyerror(const char *s);
+extern int yylex();
 
 
 %}
@@ -361,7 +362,9 @@ translation_unit:
                               root = $$;
                               printTree(0, root);
 			      currentScope = NULL;
-			      buildSymbolTable(root);}
+			      oldScopes = NULL;
+			      buildSymbolTable(root);
+			      typeCheckTree(root);}
 	;
 
 /*----------------------------------------------------------------------
@@ -1396,7 +1399,7 @@ type_id_list_opt:
 %%
 
 static void
-yyerror(char *s)
+yyerror(const char *s)
 {
     fprintf(stderr, "At line %d: %s\n", lineno, s);
 }

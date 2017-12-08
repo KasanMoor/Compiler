@@ -12,9 +12,11 @@ void pushScope(Scope *newScope)
 
 void popScope()
 {
-    Scope *scopeToBeDeleted = currentScope;
+    Scope *oldScope = currentScope;
     currentScope = currentScope->next;
-    free(scopeToBeDeleted);
+    //add it to the list of old scopes so we can use it when we typecheck
+    oldScope->next = oldScopes;
+    oldScopes = oldScope;
 }
 
 int hash(char *symbolName)
@@ -47,26 +49,29 @@ int insertSymbol(Symbol *newSymbol)
     return 1;
 }
 
-// TODO make this recursive over all nested scopes
 int symbolExistsInScope(char *symbolName)
 {
     int hashValue = hash(symbolName);
-    Symbol *currentSymbol = currentScope->hashTable[hashValue];
-    while(currentSymbol)
-    {
-        if(!strcmp(currentSymbol->name, symbolName)) 
-	{
-	    return 1;
-	}
-	currentSymbol = currentSymbol->next;
+    Scope *scope = currentScope;
+    while(scope) {
+        Symbol *currentSymbol = scope->hashTable[hashValue];
+        while(currentSymbol)
+        {
+            if(!strcmp(currentSymbol->name, symbolName)) 
+	    {
+	        return 1;
+	    }
+	    currentSymbol = currentSymbol->next;
+        }
+	scope = scope->next;
     }
     return 0;
 }
 
-Scope *newScope(char *name)
+Scope *newScope(Tree *id)
 {
     Scope *newScope = (Scope *)malloc(sizeof(Scope));
-    newScope->name = name;
+    newScope->id = id;
     newScope->next = NULL;
     return newScope;
 }
@@ -111,8 +116,8 @@ char *findName(Tree *parseTree)
 
 int buildSymbolTable(Tree *parseTree)
 {
-    pushScope(newScope(parseTree->prodrule));
-    if(!strcmp(currentScope->name, "translation_unit")) {
+    pushScope(newScope(parseTree));
+    if(!strcmp(parseTree->prodrule, "translation_unit")) {
         Tree *mainTree = newTree("mainTree");
         //Token *mainToken = (Token *)malloc(sizeof(Token));
 	//mainToken->text = "main";

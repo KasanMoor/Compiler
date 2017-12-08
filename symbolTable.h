@@ -16,13 +16,14 @@ typedef struct symbolStruct
 
 typedef struct scopeStruct
 {
-    char *name;
+    Tree *id;
     Symbol *hashTable[TABLE_SIZE];
     struct scopeStruct *next;
 } Scope;
 
 /* the global stack variable for all scopes */
 Scope *currentScope;
+Scope *oldScopes;
 
 void pushScope(Scope *newScope);
 void popScope();
@@ -31,7 +32,7 @@ int hash(char *symbolName);
 int insertSymbols(Tree *parseTree);
 int symbolExistsInScope(char *symbolName);
 
-Scope *newScope(char *name);
+Scope *newScope(Tree *id);
 Symbol *newSymbol(char *type, Tree *parseTree);
 char *findName(Tree *parseTree);
 

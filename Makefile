@@ -23,6 +23,8 @@ all: 120
 
 tree.o: tree.h tree.c
 
+typeChecking.o: typeChecking.h typeChecking.c
+
 symbolTable.o: symbolTable.h symbolTable.c
 
 clean:

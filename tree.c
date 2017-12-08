@@ -6,7 +6,7 @@
 
 extern char *yytext;
 
-Tree *newTerm(char *prodrule, Tree* leaf) {
+Tree *newTerm(char *prodrule, Token* leaf) {
     Tree *tree = (Tree *)newTree(prodrule);
     tree->leaf = leaf;
 }
@@ -28,7 +28,7 @@ Tree *newNonTerm(char *prodrule, int nkids, Tree *kid0, Tree *kid1, Tree *kid2, 
 
 Tree *newTree(char *prodrule) {
     Tree *tree = (Tree *)malloc(sizeof(Tree));
-    tree->kids = (Tree *)malloc(DEFAULT_KID_SIZE * sizeof(Tree));
+    tree->kids = (Tree **)malloc(DEFAULT_KID_SIZE * sizeof(Tree));
     tree->prodrule = prodrule;
     tree->nkids = 0;
     tree->maxKids = DEFAULT_KID_SIZE;
