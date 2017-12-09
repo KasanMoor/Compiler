@@ -5,14 +5,17 @@ using namespace std;
 int main()
 {
     int x=1;
-    int y=1;
-    y+x;
-    int a=1;
+    double y = 10;
     char b='y';
-    a+b;
 
-    //1+1;
-    //int z = y+x
+    b = 1+1;
 
+    'y' = 1+1;
+
+    'y' + 1;
+
+    1.0+1;
+
+    y+1;
 }
 

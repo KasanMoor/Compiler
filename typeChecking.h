@@ -9,11 +9,14 @@ typedef struct TypesStruct
     struct TypesStruct *next;
 } TypeList;
 
+TypeList *typeList;
+
 int typeCheckTree(Tree *tree);
-TypeList *findAllTypes(Tree *tree);
+void findAllTypes(Tree *tree);
 int compareTypes(TypeList *typeList);
 Scope *isScope(Tree *tree);
 Symbol *findSymbol(char *symbolName);
-Typelist *pushType(TypeList *typeList, char *type);
+void pushType(TypeList *type);
+TypeList *newType(char *type);
 
 #endif

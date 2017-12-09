@@ -21,6 +21,10 @@ typedef struct TreeStruct {
     Token *leaf;
 } Tree;
 
+int lexicalError;
+int semanticError;
+int syntaxError;
+
 Tree *newTree();
 Tree *newNonTerm(char *, int, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *, Tree *);
 Token *newToken(int, char *, int);

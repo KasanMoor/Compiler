@@ -6,10 +6,14 @@ int main()
 {
     int x=1;
     int y=1;
-    y+x;
     int a=1;
     char b='y';
-    a+b;
+
+    x < y;
+    x > y;
+    x || y;
+    x && y;
+    !y;
 
     //1+1;
     //int z = y+x

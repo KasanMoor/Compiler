@@ -216,7 +216,8 @@ stringtext				([^"])|(\\.)
 		*/}
 
 
-.	{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); }
+.	{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); 
+          syntaxError = 1;}
 
 %%
 

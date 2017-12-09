@@ -6,10 +6,11 @@ int main()
 {
     int x=1;
     int y=1;
-    y+x;
+    x = y+x;
     int a=1;
     char b='y';
-    a+b;
+
+    b = x+y;
 
     //1+1;
     //int z = y+x

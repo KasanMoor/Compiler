@@ -15,8 +15,12 @@ void popScope()
     Scope *oldScope = currentScope;
     currentScope = currentScope->next;
     //add it to the list of old scopes so we can use it when we typecheck
-    oldScope->next = oldScopes;
-    oldScopes = oldScope;
+    if(oldScopesList)
+    {
+        oldScopesList->last = oldScope;
+    }
+    oldScope->next = oldScopesList;
+    oldScopesList = oldScope;
 }
 
 int hash(char *symbolName)
@@ -39,7 +43,8 @@ int insertSymbol(Symbol *newSymbol)
     }
     if(symbolExistsInScope(newSymbol->name))
     {
-        printf("error: %s already declared\n", newSymbol->name);
+        fprintf(stderr, "Error: %s already declared\n", newSymbol->name);
+	semanticError = 1;
         return 0;
     }
     int hashValue = hash(newSymbol->name);
@@ -73,6 +78,7 @@ Scope *newScope(Tree *id)
     Scope *newScope = (Scope *)malloc(sizeof(Scope));
     newScope->id = id;
     newScope->next = NULL;
+    newScope->last = NULL;
     return newScope;
 }
 
@@ -192,9 +198,10 @@ int scanTree(Tree *parseTree)
         int returnCode = symbolExistsInScope(parseTree->leaf->text);
 	if(returnCode == 0) 
 	{
-            printf("At line %d, Error: %s has not been declared\n", 
+            fprintf(stderr, "At line %d, Error: %s has not been declared\n", 
 	        parseTree->leaf->lineNumber,
 		parseTree->leaf->text);
+	    semanticError = 1;
 	    return 0;
 	} else {
 	    if(DEBUG) {

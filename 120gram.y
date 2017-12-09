@@ -51,6 +51,7 @@
 /* define a syntax tree data type */
 #include "tree.h"
 #include "symbolTable.h"
+#include "typeChecking.h"
 
 extern FILE *yyin;
 extern int lineno;
@@ -360,11 +361,19 @@ boolean_literal:
 translation_unit:
 	declaration_seq_opt { $$ = newNonTerm("translation_unit",  1, $1, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL);
                               root = $$;
-                              printTree(0, root);
+			      //if(syntaxError){
+			      //    return 2;
+			      //}
+                              //printTree(0, root);
 			      currentScope = NULL;
-			      oldScopes = NULL;
+			      oldScopesList = NULL;
 			      buildSymbolTable(root);
-			      typeCheckTree(root);}
+			      typeCheckTree(root);
+			      //if(syntaxError) {
+			      //    return 3;
+			      //}else{
+			      //    return 0;
+			      }
 	;
 
 /*----------------------------------------------------------------------
@@ -1401,25 +1410,51 @@ type_id_list_opt:
 static void
 yyerror(const char *s)
 {
+    syntaxError = 1;
     fprintf(stderr, "At line %d: %s\n", lineno, s);
 }
 
 int main(int argc, char **argv) {
+    lexicalError = 0;
+    syntaxError = 0;
+    semanticError = 0;
     root = newTree();
     // There at least one command line argument
-    if(argc > 1)
-        if(!strcmp(argv[1], "-g")) {
-	    DEBUG = 1;
-            yyin = fopen(argv[2], "r");
-	}else if(!strcmp(argv[1], "-l")){
-            LEX_DEBUG = 1;
-            yyin = fopen(argv[2], "r");
-	} else {
-	    DEBUG = 0;
-	    LEX_DEBUG = 0;
-            yyin = fopen(argv[1], "r");
+    if(argc > 1) {
+        int i;
+        for( i=1; i<argc; i++) {
+	    yyin = fopen(argv[i], "r");
+	    if(yyin == NULL) {
+	        fprintf(stderr, "Could not open %s\n", argv[i]);
+		return 4;
+	    }
+	    printf("%s\n", argv[i]);
+	    do {
+	        yyparse();
+            } while(!feof(yyin));
 	}
-    do {
-        yyparse();
-    } while(!feof(yyin));
+    }
+        //if(!strcmp(argv[1], "-g")) {
+	//    DEBUG = 1;
+        //    yyin = fopen(argv[2], "r");
+	//}else if(!strcmp(argv[1], "-l")){
+        //    LEX_DEBUG = 1;
+        //    yyin = fopen(argv[2], "r");
+	//} else {
+	//    DEBUG = 0;
+	//    LEX_DEBUG = 0;
+        //    yyin = fopen(argv[1], "r");
+	//}
+    //do {
+    //    yyparse();
+    //} while(!feof(yyin));
+    if(lexicalError) {
+        return 1;
+    } else if (syntaxError) {
+        return 2;
+    } else if (semanticError) {
+        return 3;
+    } else {
+        return 0;
+    }
 }

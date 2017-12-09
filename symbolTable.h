@@ -19,11 +19,12 @@ typedef struct scopeStruct
     Tree *id;
     Symbol *hashTable[TABLE_SIZE];
     struct scopeStruct *next;
+    struct scopeStruct *last;
 } Scope;
 
 /* the global stack variable for all scopes */
 Scope *currentScope;
-Scope *oldScopes;
+Scope *oldScopesList;
 
 void pushScope(Scope *newScope);
 void popScope();

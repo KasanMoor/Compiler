@@ -8,8 +8,8 @@ all: 120
 .c.o:
 	$(CC) -g -c $<
 
-120: 120gram.o 120lex.o tree.o symbolTable.o
-	cc $(CFLAGS) -o 120++ 120gram.o 120lex.o tree.o symbolTable.o
+120: 120gram.o 120lex.o tree.o symbolTable.o typeChecking.o
+	cc $(CFLAGS) -o 120++ 120gram.o 120lex.o tree.o symbolTable.o typeChecking.o
 
 120gram.c 120gram.h: 120gram.y
 	$(YACC) -dt --verbose 120gram.y
@@ -31,4 +31,3 @@ clean:
 	rm -f 120++ *.o
 	rm -f 120lex.c 120gram.c 120gram.h
 	rm -f y.output
-	rm -r *.swp
